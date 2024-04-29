@@ -1,0 +1,14 @@
+Files that user_script folder must contain:
+ - import_dataset.py
+ - create_asp_program.py
+ - create_classifier.py
+ - training_configurations.json
+
+
+
+Contents of above files:
+ - import_dataset.py: must import the train data and train labels that the create_dataset file will process in order to create new labels. To create the import dataset file, see the example file in file_examples folder.
+
+ - create_asp_program.py: must contain the asp code that the program will use in order to create the new dataset and the neurasp model architecture. To create the asp program, see the example file in file_examples folder.
+
+ - create_classifier.py: must create the classifier that the neurasp solver model will use as a base To create the classifier, see the example file in file_examples folder.
