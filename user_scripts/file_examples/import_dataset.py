@@ -1,7 +1,11 @@
 import numpy as np
 import pandas as pd
 
+## the program below creates train_data and labels specifically for the task described in the operation_description.txt file
 
+### warning: the initial project contains the News_Category_Dataset_v3.json in the same directory as the import_dataset.py file and is needed in order for the example program to run
+### the News_Category_Dataset_v3.json file was found in kaggle: https://www.kaggle.com/datasets/rmisra/news-category-dataset/code
+### the license of the the News_Category_Dataset_v3.json dataset is: https://creativecommons.org/licenses/by/4.0/
 df = pd.read_json ("user_scripts/News_Category_Dataset_v3.json", lines = True)
 
 categories = {'POLITICS': 0,
