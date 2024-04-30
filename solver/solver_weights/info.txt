@@ -1,1 +1,0 @@
-the classifier model weights will be added in this directory
