@@ -55,7 +55,7 @@ if add_typed_digits_to_dataset:
     mnist_images = np.concatenate([mnist_images, typed_digits_images], axis=0)
     mnist_labels = np.concatenate([mnist_labels, typed_digits_labels], axis=0)
 
-mnist_images = mnist_images.astype('float32') / 255
+mnist_images = np.expand_dims(mnist_images.astype('float32') / 255, axis=-1)
 
 ### shuffle dataset ###
 
