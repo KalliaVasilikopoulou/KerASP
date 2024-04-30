@@ -66,7 +66,7 @@ except FileNotFoundError:
 
     print('Saved train data and labels to corresponding files')
 
-### Pre-process Dataset Images And Labels ###
+### Pre-process Dataset Data And Labels ###
 
 print('Imported train data and labels:')
 for data_ind, data in enumerate(train_data): 
