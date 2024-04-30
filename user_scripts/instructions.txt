@@ -6,7 +6,7 @@ Files that user_script folder must contain:
 
 
 
-Contents of above files:
+Contents of the above files:
 
  - import_dataset.py: must import the train data and train labels that the create_dataset file will process in order to create new labels. To create the import dataset file, read the corresponding example files in the file_examples folder.
 Be careful to:
