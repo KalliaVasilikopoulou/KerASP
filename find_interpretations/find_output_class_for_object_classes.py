@@ -55,11 +55,10 @@ def find_all_output_classes_for_known_obj_classes(print_details=False, return_ou
 
     all_output_classes = []
 
-    from project_utils.convert_number import number_to_base
+    import itertools
+    all_object_classes_combs = [list(comb) for comb in itertools.product(list_of_object_classes, repeat=num_of_objects)]
 
-    for num in range(classes_per_object**num_of_objects):
-        object_classes_comb = number_to_base(num,classes_per_object)     # base is equal to the number of the object classes (classifier output classes)
-        object_classes_comb = [0]*(num_of_objects-len(object_classes_comb))+object_classes_comb
+    for object_classes_comb in all_object_classes_combs:
         output_class = find_output_class_for_known_obj_classes(object_classes_comb)
         all_output_classes.append(output_class)
         if print_details: print('Possible output_classes for object classes combination '+str(object_classes_comb)[1:-1]+':', output_class)

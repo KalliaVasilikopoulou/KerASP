@@ -1,7 +1,7 @@
 import numpy as np
 
 import keras
-from keras import layers, optimizers
+from keras import layers, models, optimizers
 from keras import backend as K
 
 from keras.utils import plot_model
@@ -30,7 +30,7 @@ from find_interpretations.find_object_classes_for_output_class import find_all_o
 class Solver():
     def __init__(self, compile_model = False, compile_model_classifier = False):
         
-        self.model_obj_classifier = classifier
+        self.model_obj_classifier = models.clone_model(classifier)
         self.model_obj = self.build_model_obj()
         
         if compile_model:
@@ -45,7 +45,7 @@ class Solver():
         classifier_inputs = 0
         classifier_input_shapes = []
         
-        for layer in classifier.layers:
+        for layer in self.model_obj_classifier.layers:
             if layer.name.startswith('input'):
                 classifier_inputs +=1
                 classifier_input_shapes.append(layer.output.shape[1:])
@@ -57,7 +57,7 @@ class Solver():
         else:
             solver_input = [keras.Input(shape=classifier_input_shapes[0], name='input_of_'+object_type+'_'+str(object_i)) for object_i in range(num_of_objects)]
         
-        classes_probs = [classifier(i) for i in solver_input]      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
+        classes_probs = [self.model_obj_classifier(i) for i in solver_input]      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
 
 
         def separate_probs(classes_probs):    # (None,classes_per_object)
@@ -69,7 +69,7 @@ class Solver():
 
         objects_combinations_of_all_output_classes, output_classes_list = find_all_obj_classes_for_known_output_classes(return_output_classes_list=True)
         
-        combinations_probs_of_all_output_classes = [[layers.Multiply(name=output_type+'_'+str(output_class_k)+'_'+object_type+'_comb_no_'+str(comb_ind+1)+'_prob')([probs[i][j] for i,j in enumerate(comb)])  # i = object, j = class of object
+        combinations_probs_of_all_output_classes = [[layers.Multiply(name=output_type+'_'+str(output_class_k)+'_'+object_type+'_comb_no_'+str(comb_ind+1)+'_prob')([probs[i][list_of_object_classes.index(j)] for i,j in enumerate(comb)])  # i = object, j = class of object
                                                  for comb_ind,comb in enumerate(objects_combinations_of_output_class_k)]
                                                 for output_class_k, objects_combinations_of_output_class_k in zip(output_classes_list, objects_combinations_of_all_output_classes)]   # [(None,), (None,),...,(None,)], length of list = num of interpretations
 
@@ -80,7 +80,7 @@ class Solver():
         
         solver_output = layers.Concatenate(axis=-1)(probs_of_all_output_classes)   # (None, satisfiable values)
         
-        solver = keras.models.Model(solver_input, solver_output, name='solver')
+        solver = models.Model(solver_input, solver_output, name='solver')
 
         print('Keras model building is completed.')
 

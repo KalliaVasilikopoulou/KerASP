@@ -19,7 +19,7 @@ except KeyError: tokenize_data = False
 try:
     import os
     classifier_inputs = 0
-    for _, _, files in os.walk("train_data/"):
+    for _, _, files in os.walk('train_data/'):
         for file in files:    
             if file.startswith('train_data') and file.endswith('.npy'):
                 classifier_inputs += 1
@@ -99,6 +99,10 @@ stop_early = keras.callbacks.EarlyStopping(monitor='val_acc', patience=3)
 # tensorboard charts can be found at:
 # localhost:6006
 tensorboard = keras.callbacks.TensorBoard(log_dir='tensorboard_logs', histogram_freq=1, embeddings_freq=1)
+
+### clean tensorboard logs from previous executions ###
+from project_utils.clean_tensorboard_logs import clean_tensorboard_logs
+clean_tensorboard_logs()
 
 solver.fit(x=train_data, y=train_labels,
            epochs=epochs,

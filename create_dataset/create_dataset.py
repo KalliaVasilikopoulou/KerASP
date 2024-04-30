@@ -22,7 +22,8 @@ except KeyError: tokenize_data = False
 data_organized_by_object_class = {obj_class:[] for obj_class in list_of_object_classes}
 
 for i,label in enumerate(input_labels):
-    data_organized_by_object_class[int(label)].append([data[i] for data in input_data])
+    if label in list_of_object_classes:
+        data_organized_by_object_class[int(label)].append([data[i] for data in input_data])
 
 print('\nTotal data (samples) per object class')
 for obj_class in data_organized_by_object_class:
@@ -40,17 +41,19 @@ train_data = [[] for _ in range(classifier_inputs)]
 train_obj_classes_labels = []
 train_labels = []
 
+import itertools
+all_object_classes_combs = [list(comb) for comb in itertools.product(list_of_object_classes, repeat=num_of_objects)]
+
 import sys
 samples = 0
 print('\nDataset creation...')
 
 while True:
     try:
-        for num, output_class_for_object_classes in enumerate(output_classes):
+        for ind, output_class_for_object_classes in enumerate(output_classes):
             if output_class_for_object_classes == -1: continue # if unsatisfiable, continue
             
-            object_classes_comb = number_to_base(num,10)     # base is equal to the number of the output classes (here we have 10 topics, so base=10)
-            object_classes_comb = [0]*(3-len(object_classes_comb))+object_classes_comb
+            object_classes_comb = all_object_classes_combs[ind]
 
             sample_data = [[] for _ in range(classifier_inputs)]
             sample_obj_classes_labels = []
@@ -60,7 +63,7 @@ while True:
                 data_organized_by_object_class_pointer[object_class] = data_organized_by_object_class_pointer[object_class]+1
                                                                       # if data_organized_by_object_class_pointer[object_class]+1 < len(data_organized_by_object_class_pointer[object_class]) else 0
                 for i in range(classifier_inputs):
-                    sample_data[i].append(sample_data_for_obj_class)
+                    sample_data[i].append(sample_data_for_obj_class[i])
                 sample_obj_classes_labels.append(object_class)
 
             for j in range(classifier_inputs):
@@ -98,4 +101,6 @@ print('train_labels dataset shape:', train_labels.shape)
 if tokenize_data:
     from tokenization.tokenize_data import tokenize_data
     train_data, train_tokenizers_dict = tokenize_data(train_data)
+
+
 
