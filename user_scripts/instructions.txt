@@ -7,8 +7,35 @@ Files that user_script folder must contain:
 
 
 Contents of above files:
- - import_dataset.py: must import the train data and train labels that the create_dataset file will process in order to create new labels. To create the import dataset file, see the example file in file_examples folder.
 
- - create_asp_program.py: must contain the asp code that the program will use in order to create the new dataset and the neurasp model architecture. To create the asp program, see the example file in file_examples folder.
+ - import_dataset.py: must import the train data and train labels that the create_dataset file will process in order to create new labels. To create the import dataset file, read the corresponding example files in the file_examples folder.
+Be careful to:
+1. pre-process the training data and labels according to the task you want the classifier to train on
+2. give the ndarray variable that holds the train data the name "train_data" and the ndarray variable that holds the train labels the name "train_labels", because these are the names the program expects
+3. add the <"tokenize_data": true> line in the training_configurations.json file, if you want to tokenize your data and create new train sequences during the new data creation
 
- - create_classifier.py: must create the classifier that the neurasp solver model will use as a base To create the classifier, see the example file in file_examples folder.
+
+ - create_asp_program.py: must contain the asp code that the program will use in order to create the new dataset and the neurasp model architecture. To create the asp program, read the corresponding example files in the file_examples folder.
+Be careful to:
+1. create two separate variables, where each one of them will contains a version of the same clingo program (the only differences between the two are (a) the fixed ground atoms and (b) the ground atoms requested in the answer set). The names of the two variables MUST be "asp_program_for_object_classes" (accepts as fixed value one of the output classes of the solver and returns all the possible combinations of the classes of the classifier that correspond to this output class) and "asp_program_for_output_class" (accepts as fixed values a combination of the classes of the classifier and returns the output class of the solver that corresponds to this combination (only 1 solver output class must correspond to each one of the classifier classes combinations))
+2. set the string "$$$" as value of the fixed ground atoms. Consider this string as a blank space that the program will fill with values during training
+
+
+ - create_classifier.py: must create the classifier that the neurasp solver model will use as a base To create the classifier, read the corresponding example files in the file_examples folder.
+Be careful to:
+1. give the keras model variable that holds the classifier model the name "classifier", because that is the name the program expects
+
+
+ - training_configurations.json: must set the configurations for the training. To create the training configurations file, read the corresponding example files in the file_examples folder.
+Be careful to:
+1. create these necessary for training variables: "epochs", "batch_size", "validation_split", "learning_rate", "decay"
+2. create a dictionary called "program_specs" that will include the variables "num_of_objects" (number of objects to import to the model per training step: f.e. in neurasp addition we import 2 images per training step), "list_of_object_classes" (the classes between which the classifier must decide the correct one), "list_of_possible_output_classes" (the classes between which the solver must decide the correct one), "object_type" (the type of the inputs: f.e. for the neurasp addition the inputs are images, so we could set the value as "image"), "output_type" (the type of the output classes: f.e. for the neurasp addition the outputs are sums, so we could set this value as "sum"), "classes_type" (the type of the classifier output classes: f.e. for the neurasp addition the classifier outputs are digits, so we could set this value as "digit")
+3. add the <"tokenize_data": true> line, if you want to tokenize your input data and create new train sequences during the new data creation (the created tokenizers will be saved in the train_data folder)
+4. create any other important variables for your imported data and your classifier
+
+
+
+
+
+
+
