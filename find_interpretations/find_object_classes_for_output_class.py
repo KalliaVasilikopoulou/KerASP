@@ -80,7 +80,7 @@ def find_all_obj_classes_for_known_output_classes(print_details=False, return_ou
         for output_class, models_of_output_class in zip(satisfiable_output_classes, models_of_all_output_classes):
             print('Output class', output_class, 'corresponds to', len(models_of_output_class), 'object classes combination(s) (model(s)) totally')
         
-        obj_class_count_per_object = np.zeros((3,10), dtype='int32')      # (objects, obj_classes)
+        obj_class_count_per_object = np.zeros((num_of_objects, classes_per_object), dtype='int32')      # (objects, obj_classes)
         for models_of_output_class in models_of_all_output_classes:
             for model in models_of_output_class:
                 for object_i,obj_class in enumerate(model):
