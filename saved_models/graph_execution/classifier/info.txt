@@ -1,0 +1,1 @@
+the classifier (normally trained as part the solver model) model and weight .h5 files will be added in this directory

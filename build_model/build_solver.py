@@ -73,7 +73,7 @@ class Solver():
                                                  for comb_ind,comb in enumerate(objects_combinations_of_output_class_k)]
                                                 for output_class_k, objects_combinations_of_output_class_k in zip(output_classes_list, objects_combinations_of_all_output_classes)]   # [(None,), (None,),...,(None,)], length of list = num of interpretations
 
-        probs_of_all_output_classes = [layers.Add(name=output_type+'_'+str(output_class_k)+'_prob')(combinations_probs_of_output_class_k) for output_class_k, combinations_probs_of_output_class_k in zip(output_classes_list, combinations_probs_of_all_output_classes)]       # [(None,),...,], length = all possible values = 9
+        probs_of_all_output_classes = [layers.Add(name=output_type+'_'+str(output_class_k)+'_prob')(combinations_probs_of_output_class_k) for output_class_k, combinations_probs_of_output_class_k in zip(output_classes_list, combinations_probs_of_all_output_classes)]       # [(None,),...,], length = all possible values = satisfiable values
 
         reshape_layer = layers.Reshape((1,), name=output_type+'_k_prob_reshaped')
         probs_of_all_output_classes = [reshape_layer(probs_of_output_class_k) for probs_of_output_class_k in probs_of_all_output_classes]   # (None, satisfiable values)

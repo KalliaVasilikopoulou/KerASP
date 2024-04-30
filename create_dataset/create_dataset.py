@@ -1,8 +1,16 @@
+import numpy as np
+
 from user_scripts.import_dataset import input_data, input_labels
 
-classifier_inputs = len(input_data)
+### check if input data has correct structure ###
+if isinstance(input_data, list):
+    pass
+elif isinstance(input_data, np.ndarray):
+    input_data = [input_data]
+else:
+    raise Exception('Input data must be a numpy array or a list of numpy arrays')
 
-import numpy as np
+classifier_inputs = len(input_data)
 
 
 ### OUTPUT CLASSES DATASET CREATION INITIATION ###

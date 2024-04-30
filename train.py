@@ -90,6 +90,7 @@ solver = solver_inst.model_obj
 classifier = solver_inst.model_obj_classifier
 
 ### Train Model ###
+
 import keras
 stop_early = keras.callbacks.EarlyStopping(monitor='val_acc', patience=3)
 
@@ -115,22 +116,22 @@ solver.fit(x=train_data, y=train_labels,
 ### save model ###
 
 # save solver model
-solver.save('solver/solver_model/solver_model.h5')
+solver.save('saved_models/graph_execution/solver/solver_model.h5')
 print('saved solver model')
 
 # save classifier model
-classifier.save('classifier/classifier_model/classifier_model.h5')
+classifier.save('saved_models/graph_execution/classifier/classifier_model.h5')
 print('saved classifier model')
 
 
 ### save model weights ###
 
 # save solver weights
-solver.save_weights('solver/solver_weights/solver_weights.h5')
+solver.save_weights('saved_models/graph_execution/solver/solver_weights.h5')
 print('saved solver weights')
 
 # save classifier weights
-classifier.save_weights('classifier/classifier_weights/classifier_weights.h5')
+classifier.save_weights('saved_models/graph_execution/classifier/classifier_weights.h5')
 print('saved classifier weights')
 
 
