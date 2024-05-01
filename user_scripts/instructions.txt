@@ -13,6 +13,7 @@ Be careful to:
 1. pre-process the training data and labels according to the task you want the classifier to train on. Train data can be a ndarray or a list of ndarrays and train labels must be a ndarray that contains integers.
 2. give the ndarray variable that holds the train data the name "train_data" and the ndarray variable that holds the train labels the name "train_labels", because these are the names the program expects.
 3. add the <"tokenize_data": true> line in the training_configurations.json file, if you want to tokenize your data and create new train sequences during the new data creation.
+4. If you already have the training data and labels you want to train the solver on available (f.e. in mnist addition, if you already have the pairs of images and the sum of each pair as their label), you do NOT have to create this python file. You can just convert these training data and labels to .npy files and put them in the train_data folder. The import_dataset.py file is needed in order to convert the mnist single images to pairs of images and the mnist labels to sums for each pair (the goal is to make the training process more difficult for a simple neural network and to demonstrate the utility of the neurasp model in cases where, not only perception, but also reasoning is required in order to identify the correct output class).
 
 
  - create_asp_program.py: must contain the asp code that the program will use in order to create the new dataset and the neurasp model architecture. To create the asp program, read the corresponding example files in the file_examples folder.
@@ -21,7 +22,7 @@ Be careful to:
 2. set the string "$$$" as value of the fixed ground atoms. Consider this string as a blank space that the program will fill with values during training.
 
 
- - create_classifier.py: must create the classifier that the neurasp solver model will use as a base To create the classifier, read the corresponding example files in the file_examples folder.
+ - create_classifier.py: must create the classifier that the neurasp solver model will use as a base. To create the classifier, read the corresponding example files in the file_examples folder.
 Be careful to:
 1. give the keras model variable that holds the classifier model the name "classifier", because that is the name the program expects.
 
