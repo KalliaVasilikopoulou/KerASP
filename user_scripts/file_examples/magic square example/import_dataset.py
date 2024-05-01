@@ -68,7 +68,7 @@ mnist_labels = mnist_labels[indices]
 
 ###########################################
 
-input_data = [mnist_images]
+input_data = mnist_images
 input_labels = mnist_labels
 
 
