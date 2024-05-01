@@ -59,10 +59,8 @@ news_descriptions = clean_text_vec(news_descriptions)
 print('Text cleaning process has finished.')
 
 
+###########################################
 
-### IMPORTANT PART ###
-
-## input data must be a list of data, even if it is 1 numpy array
 input_data = [news_headlines, news_descriptions]
 input_labels = news_topic_labels
 
