@@ -8,7 +8,7 @@ The reasoning part of the keras model is constructed based on the answer sets of
 
 This program creates:
  - a dataset specifically for the training of the neurasp model and saves it in the train_data folder
- - a default neurasp model, trains it and saves it in the solver folder (it also saves the classifier of the neurasp model in a separate classifier folder)
+ - a default neurasp model, trains it and saves it in the saved_models folder (it also saves the classifier of the neurasp model in the same folder)
  - tokenizers for the dataset, if the user needs them, and saves them in the train_data folder
 
 
