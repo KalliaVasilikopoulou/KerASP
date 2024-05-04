@@ -6,13 +6,17 @@ import re
 
 from training_configurations import training_configurations
 
-program_specs = training_configurations['program_specs']
+neurasp_conf = training_configurations['neurasp_conf']
+classifiers_conf = neurasp_conf['classifiers_conf']
+# sort classifiers_conf dictionary
+classifiers_conf = dict(sorted(classifiers_conf.items()))
 
-num_of_objects = program_specs['num_of_objects']
-list_of_object_classes = program_specs['list_of_object_classes']
-classes_per_object = len(list_of_object_classes)
+objects_of_classifier = {i: sorted(classifiers_conf[i]['objects']) for i in classifiers_conf}
 
-list_of_possible_output_classes = program_specs['list_of_possible_output_classes']
+all_objects = [obj for i in classifiers_conf for obj in objects_of_classifier[i]]       # we must not have duplicates
+all_objects.sort()
+
+list_of_possible_output_classes = neurasp_conf['list_of_possible_output_classes']
 
 
 def extract_clause_strings(model):
@@ -78,35 +82,12 @@ def find_all_obj_classes_for_known_output_classes(print_details=False, return_ou
         
         print('\nObject classes combinations (models) that are formed for each output class:')
         for output_class, models_of_output_class in zip(satisfiable_output_classes, models_of_all_output_classes):
-            print('Output class', output_class, 'corresponds to', len(models_of_output_class), 'object classes combination(s) (model(s)) totally')
-        
-        obj_class_count_per_object = np.zeros((num_of_objects, classes_per_object), dtype='int32')      # (objects, obj_classes)
-        for models_of_output_class in models_of_all_output_classes:
-            for model in models_of_output_class:
-                for object_i,obj_class in enumerate(model):
-                    obj_class_count_per_object[object_i][obj_class] += 1
-
-        print('\obj_class count per object:')
-        for object_i, obj_classes_count in zip(range(num_of_objects), obj_class_count_per_object):
-            for obj_class, count in enumerate(obj_classes_count):
-                print('obj_class', obj_class, 'was found', count, 'times in object', object_i)
-            
-        print('\nobj_class count for all objects:')
-        obj_class_count = np.sum(obj_class_count_per_object, axis=0)
-        for obj_class, count in enumerate(obj_class_count):
-            print('obj_class', obj_class, 'was found', count, 'times')
-
-        print('\nMaximum times a single obj_class was found in a single object:')
-        object_max_count = np.max(obj_class_count_per_object, axis=1)
-        object_max_count_obj_class = np.argmax(obj_class_count_per_object, axis=1)
-        for object_i, max_count, max_count_obj_class in zip(range(num_of_objects), object_max_count, object_max_count_obj_class):
-            print('obj_class', max_count_obj_class, 'was found', max_count, 'times totally in object', object_i)
-
-        print('\nMinimum times a single obj_class was found in a single object:')
-        object_min_count = np.min(obj_class_count_per_object, axis=1)
-        object_min_count_obj_class = np.argmin(obj_class_count_per_object, axis=1)
-        for object_i, min_count, min_count_obj_class in zip(range(num_of_objects), object_min_count, object_min_count_obj_class):
-            print('obj_class', min_count_obj_class, 'was found', min_count, 'times totally in object', object_i)
+            print('Output class', output_class, 'corresponds to', len(models_of_output_class), 'object classes combination(s) (model(s)) totally:')
+            for i in range(len(models_of_output_class)):
+                model_comb = models_of_output_class[i]
+                comb_list = ['object '+str(all_objects[j])+' with value '+model_comb[j] for j in range(len(all_objects))]
+                comb_str = ' and '.join(comb_list)
+                print('\tCombination', i, ':', comb_str)
             
         print('\n')
 

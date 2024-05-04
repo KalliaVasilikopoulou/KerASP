@@ -71,6 +71,13 @@ mnist_labels = mnist_labels[indices]
 input_data = mnist_images
 input_labels = mnist_labels
 
+data_dict = {'1':
+                 {'input_data': mnist_images,
+                  'input_labels': input_labels},
+             '2':
+                  {'input_data': mnist_images,
+                   'input_labels': input_labels}}
+
 
 
 
