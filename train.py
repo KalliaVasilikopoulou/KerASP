@@ -78,16 +78,18 @@ for ind_classifier in classifiers_conf:
         data = np.array_split(data, data.shape[1], axis=1)
         train_data[ind_classifier][i] = [np.squeeze(j, axis=1) for j in data]      # list conctaining classifier_inputs elements and each element is a list containing num_of_objects elements and each element has shape (samples, datapoint shape)
 
+### Convert train data dict to list ###
+train_data = list(train_data.values())
 
 from find_interpretations.find_output_class_for_object_classes import find_all_output_classes_for_known_obj_classes
 _, output_classes_list = find_all_output_classes_for_known_obj_classes(return_output_classes_list=True)
 
 train_labels = to_categorical(train_labels, classes_list=output_classes_list)
 
-print('train data classifiers:', len(train_data.keys()))                                 # num of individual classifiers
-print('train data classifier 1 inputs (list length):', len(train_data['1']))            # classifier_inputs
-print('train data_k list length:', len(train_data['1'][0]))                             # num_of_objects that go into classifier '1'
-print('train data_k object_n shape:', train_data['1'][0][0].shape)                      # (samples, datapoint shape)
+print('train data classifiers:', len(train_data))                                # num of individual classifiers
+print('train data classifier 1 inputs (list length):', len(train_data[0]))            # classifier_inputs
+print('train data_k list length:', len(train_data[0][0]))                             # num_of_objects that go into classifier '1'
+print('train data_k object_n shape:', train_data[0][0][0].shape)                      # (samples, datapoint shape)
 print('train labels shape:', train_labels.shape)                                        # (samples, solver classes)
 
 ##train_data_draft = []

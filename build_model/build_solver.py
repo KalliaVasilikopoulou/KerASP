@@ -85,6 +85,9 @@ class Solver():
             obj_probs = classifier_x(obj_input)
             classes_probs.append(obj_probs)      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
 
+        ### Convert solver input dict to list ###
+        solver_input = list(solver_input.values())
+
         def separate_probs(classes_probs):    # (None,classes_per_object)
 
             return [classes_probs[:,class_i] for class_i in range(K.int_shape(classes_probs)[-1])]      # [(None,),(None,),...,(None,)], length of list=classes_per_object
