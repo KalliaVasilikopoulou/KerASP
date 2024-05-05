@@ -1,3 +1,7 @@
+!!! NEW VERSION !!!
+The new version can handle multiple classifiers that accept different inputs and return different distributions (each classifier has a different set of classes where it assigns probabilities). The solver calculates the probabilities of the combinations of the different inputs and returns the probability distribution of the output classes.
+
+
 Neurasp Model Training Project
 
 Neurasp Model Training Project attempts to create a new neurasp 'solver', that is, basically, a keras model extension of a given classifier, and train the whole model based on new labels, more complex than the initial ones.
