@@ -1,5 +1,5 @@
 !!! NEW VERSION !!!
-The new version can handle multiple classifiers that accept different inputs and return different distributions (each classifier has a different set of classes where it assigns probabilities). The solver calculates the probabilities of the combinations of the different inputs and returns the probability distribution of the output classes.
+The new version can handle multiple classifiers that accept different inputs and return different distributions (each classifier has a different set of classes where it assigns probabilities). The solver calculates the probabilities of the combinations of all the different classifiers' classes and, after that, it calcuclates and returns the probability distribution of the solver's output classes.
 
 
 Neurasp Model Training Project
