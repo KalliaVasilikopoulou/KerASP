@@ -1,8 +1,6 @@
 import keras
 from keras import layers
 
-from training_configurations import training_configurations
-
 max_words_in_dict = training_configurations['max_words_in_dict']
 max_words_per_sample = training_configurations['max_words_per_sample']
 embedding_dim = training_configurations['embedding_dim']

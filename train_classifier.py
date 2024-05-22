@@ -5,7 +5,7 @@ from keras.utils import to_categorical
 
 ### Set Training Parameters ###
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 epochs = training_configurations['epochs']
 batch_size = training_configurations['batch_size']
@@ -66,7 +66,7 @@ except FileNotFoundError:
 
     print('Saved train data and labels to corresponding files')
 
-### Pre-process Dataset Data And Labels ###
+### Pre-process Dataset Images And Labels ###
 
 print('Imported train data and labels:')
 for data_ind, data in enumerate(train_data): 

@@ -59,7 +59,8 @@ news_descriptions = clean_text_vec(news_descriptions)
 print('Text cleaning process has finished.')
 
 
-###########################################
+
+### IMPORTANT PART ###
 
 input_data = [news_headlines, news_descriptions]
 input_labels = news_topic_labels

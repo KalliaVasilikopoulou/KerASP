@@ -1,8 +1,6 @@
 import keras
 from keras import layers, models
 
-from training_configurations import training_configurations
-
 classifier_input = keras.Input(shape=(28,28,1))
 x = layers.Conv2D(32, (3,3), activation='relu')(classifier_input)
 x = layers.MaxPooling2D((2,2))(x)

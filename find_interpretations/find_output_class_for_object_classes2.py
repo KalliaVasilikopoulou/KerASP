@@ -6,19 +6,30 @@ import re
 
 from user_scripts.training_configurations import training_configurations
 
-program_specs = training_configurations['program_specs']
+neurasp_conf = training_configurations['neurasp_conf']
+classifiers_conf = neurasp_conf['classifiers_conf']
+# sort classifiers_conf dictionary
+classifiers_conf = dict(sorted(classifiers_conf.items()))
 
-num_of_objects = program_specs['num_of_objects']
-list_of_object_classes = program_specs['list_of_object_classes']
-classes_per_object = len(list_of_object_classes)
+objects_of_classifier = {i: sorted(classifiers_conf[i]['objects']) for i in classifiers_conf}
+classes_of_classifier = {i: sorted(classifiers_conf[i]['list_of_object_classes']) for i in classifiers_conf}
 
-list_of_possible_output_classes = program_specs['list_of_possible_output_classes']
+all_objects = [obj for i in classifiers_conf for obj in objects_of_classifier[i]]       # we must not have duplicates
+all_objects.sort()
 
-unsat_value = float('-inf')
+classifier_of_object = {}
+classes_of_object = {}
+for obj in all_objects:
+    for i in classifiers_conf:
+        if obj in objects_of_classifier[i]:
+            classifier_of_object[obj] = i
+            classes_of_object[obj] = classes_of_classifier[i]
+
+list_of_possible_output_classes = neurasp_conf['list_of_possible_output_classes']
 
 def extract_output_class(model):
 
-    output_class = re.findall(r'(?<=output_class\()-?\d+(?=\))', model)[0]  # only 1 value for specific topics combination 
+    output_class = re.findall(r'(?<=output_class\()\d+(?=\))', model)[0]  # only 1 value for specific topics combination 
     output_class = int(output_class) if output_class else None
 
     return output_class
@@ -42,7 +53,7 @@ def find_output_class_for_known_obj_classes(object_classes_comb):
         print("\nPi': \n{}".format(program))
     clingo_control.ground([("base", [])])
     clingo_control.solve(on_model = lambda model: models.append(model.symbols(atoms=True)))
-    output_class = extract_output_class(str(models[0])) if models else unsat_value
+    output_class = extract_output_class(str(models[0])) if models else -1      # -1=unsat
 
     return output_class
 
@@ -52,12 +63,12 @@ def find_all_output_classes_for_known_obj_classes(print_details=False, return_ou
 
     if print_details:
         print('Output class possible satisfiable answers:', str(list_of_possible_output_classes)[1:-1] )
-        print('Output class unsatisfiable answer:', unsat_value )
+        print('Output class unsatisfiable answer:', -1 )
 
     all_output_classes = []
 
     import itertools
-    all_object_classes_combs = [list(comb) for comb in itertools.product(list_of_object_classes, repeat=num_of_objects)]
+    all_object_classes_combs = list(itertools.product(*[classes_of_object[obj] for obj in all_objects]))
 
     for object_classes_comb in all_object_classes_combs:
         output_class = find_output_class_for_known_obj_classes(object_classes_comb)
@@ -69,7 +80,7 @@ def find_all_output_classes_for_known_obj_classes(print_details=False, return_ou
         output_classes_list = list(set(all_output_classes))
         output_classes_list.sort()
         try:
-            output_classes_list.remove(unsat_value)
+            output_classes_list.remove(-1)
         except ValueError:
             pass
         return all_output_classes, output_classes_list      # (num of satisfiable combinations of num_of_objects objects,), output_classes_list

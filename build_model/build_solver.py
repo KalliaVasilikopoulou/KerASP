@@ -7,7 +7,7 @@ from keras import backend as K
 from keras.utils import plot_model
 from keras_visualizer import visualizer
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 dropout_rate = training_configurations['dropout_rate']
 learning_rate = training_configurations['learning_rate']
