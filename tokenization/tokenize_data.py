@@ -3,7 +3,7 @@ import numpy as np
 
 from keras.utils.data_utils import pad_sequences
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 max_words_in_dict = training_configurations['max_words_in_dict']
 max_words_per_sample = training_configurations['max_words_per_sample']

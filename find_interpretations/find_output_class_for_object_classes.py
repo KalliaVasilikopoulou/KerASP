@@ -4,7 +4,7 @@ import numpy as np
 from clingo.control import Control
 import re
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 neurasp_conf = training_configurations['neurasp_conf']
 classifiers_conf = neurasp_conf['classifiers_conf']
@@ -27,9 +27,11 @@ for obj in all_objects:
 
 list_of_possible_output_classes = neurasp_conf['list_of_possible_output_classes']
 
+unsat_value = float('-inf')
+
 def extract_output_class(model):
 
-    output_class = re.findall(r'(?<=output_class\()\d+(?=\))', model)[0]  # only 1 value for specific topics combination 
+    output_class = re.findall(r'(?<=output_class\()-?\d+(?=\))', model)[0]  # only 1 value for specific topics combination 
     output_class = int(output_class) if output_class else None
 
     return output_class
@@ -53,7 +55,7 @@ def find_output_class_for_known_obj_classes(object_classes_comb):
         print("\nPi': \n{}".format(program))
     clingo_control.ground([("base", [])])
     clingo_control.solve(on_model = lambda model: models.append(model.symbols(atoms=True)))
-    output_class = extract_output_class(str(models[0])) if models else -1      # -1=unsat
+    output_class = extract_output_class(str(models[0])) if models else unsat_value
 
     return output_class
 
@@ -63,7 +65,7 @@ def find_all_output_classes_for_known_obj_classes(print_details=False, return_ou
 
     if print_details:
         print('Output class possible satisfiable answers:', str(list_of_possible_output_classes)[1:-1] )
-        print('Output class unsatisfiable answer:', -1 )
+        print('Output class unsatisfiable answer:', unsat_value )
 
     all_output_classes = []
 
@@ -80,7 +82,7 @@ def find_all_output_classes_for_known_obj_classes(print_details=False, return_ou
         output_classes_list = list(set(all_output_classes))
         output_classes_list.sort()
         try:
-            output_classes_list.remove(-1)
+            output_classes_list.remove(unsat_value)
         except ValueError:
             pass
         return all_output_classes, output_classes_list      # (num of satisfiable combinations of num_of_objects objects,), output_classes_list

@@ -42,7 +42,7 @@ else:
 
 ### OUTPUT CLASSES DATASET CREATION INITIATION ###
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 neurasp_conf = training_configurations['neurasp_conf']
 classifiers_conf = neurasp_conf['classifiers_conf']
@@ -99,12 +99,15 @@ all_object_classes_combs = list(itertools.product(*[classes_of_object[obj] for o
 
 import sys
 samples = 0
+
+unsat_value = float('-inf')
+
 print('\nDataset creation...')
 
 while True:
     try:
         for ind, output_class_for_object_classes in enumerate(output_classes):
-            if output_class_for_object_classes == -1: continue # if unsatisfiable, continue
+            if output_class_for_object_classes == unsat_value: continue # if unsatisfiable, continue
             
             object_classes_comb = all_object_classes_combs[ind]
 

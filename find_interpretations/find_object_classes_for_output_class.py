@@ -4,7 +4,7 @@ import numpy as np
 from clingo.control import Control
 import re
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 neurasp_conf = training_configurations['neurasp_conf']
 classifiers_conf = neurasp_conf['classifiers_conf']
@@ -21,7 +21,7 @@ list_of_possible_output_classes = neurasp_conf['list_of_possible_output_classes'
 
 def extract_clause_strings(model):
 
-    clause_strings = re.findall(r'(?<=object_class\()\d+,\d+(?=\))', model)
+    clause_strings = re.findall(r'(?<=object_class\()-?\d+,-?\d+(?=\))', model)
 
     return clause_strings
 
