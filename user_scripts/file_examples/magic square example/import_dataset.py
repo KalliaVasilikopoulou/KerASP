@@ -8,7 +8,7 @@ import random
 
 from tqdm import tqdm
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 mnist_dataset_portion = training_configurations['mnist_dataset_portion']
 add_typed_digits_to_dataset = training_configurations['add_typed_digits_to_dataset']
