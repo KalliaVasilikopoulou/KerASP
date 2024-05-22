@@ -14,6 +14,8 @@ validation_split = training_configurations['validation_split']
 neurasp_conf = training_configurations['neurasp_conf']
 classifiers_conf = neurasp_conf['classifiers_conf']
 
+objects_of_classifier = {i: sorted(classifiers_conf[i]['objects']) for i in classifiers_conf}
+
 try: tokenize_data = training_configurations['tokenize_data']
 except KeyError: tokenize_data = False
 
@@ -78,23 +80,34 @@ for ind_classifier in classifiers_conf:
         data = np.array_split(data, data.shape[1], axis=1)
         train_data[ind_classifier][i] = [np.squeeze(j, axis=1) for j in data]      # list conctaining classifier_inputs elements and each element is a list containing num_of_objects elements and each element has shape (samples, datapoint shape)
 
-### Convert train data dict to list ###
-train_data = list(train_data.values())
+##### Convert train data dict to list ###
+##train_data = list(train_data.values())
 
 from find_interpretations.find_output_class_for_object_classes import find_all_output_classes_for_known_obj_classes
 _, output_classes_list = find_all_output_classes_for_known_obj_classes(return_output_classes_list=True)
 
 train_labels = to_categorical(train_labels, classes_list=output_classes_list)
 
-print('train data classifiers:', len(train_data))                                # num of individual classifiers
-print('train data classifier 1 inputs (list length):', len(train_data[0]))            # classifier_inputs
-print('train data_k list length:', len(train_data[0][0]))                             # num_of_objects that go into classifier '1'
-print('train data_k object_n shape:', train_data[0][0][0].shape)                      # (samples, datapoint shape)
-print('train labels shape:', train_labels.shape)                                        # (samples, solver classes)
+##print('train data classifiers:', len(train_data))                                # num of individual classifiers
+##print('train data classifier 1 inputs (list length):', len(train_data[0]))            # classifier_inputs
+##print('train data_k list length:', len(train_data[0][0]))                             # num_of_objects that go into classifier '1'
+##print('train data_k object_n shape:', train_data[0][0][0].shape)                      # (samples, datapoint shape)
+##print('train labels shape:', train_labels.shape)                                        # (samples, solver classes)
 
-##train_data_draft = []
-##for obj in all_objects:
-    
+### Convert train data to dict of separate numpy arrays ###
+train_data_dict = {}
+for ind_classifier in classifiers_conf:
+    for obj_ind, obj in enumerate(objects_of_classifier[ind_classifier]):
+        if len(train_data[ind_classifier]) == 1:
+            name = 'classifier_'+str(ind_classifier)+'_input_of_'+classifiers_conf[ind_classifier]['object_type']+'_'+str(obj)
+            train_data_dict[name] = train_data[ind_classifier][0][obj_ind]
+        else:
+            for data_ind in range(len(train_data[ind_classifier])):
+                name = 'classifier_'+str(ind_classifier)+'_input_'+str(data_ind)+'_of_'+classifiers_conf[ind_classifier]['object_type']+'_'+str(obj)
+                train_data_dict[name] = train_data[ind_classifier][data_ind][obj_ind]
+
+for key, value in train_data_dict.items():
+    print('solver input:', key, ', with shape:', value.shape)
 
 ### Import Model ###
 
@@ -106,6 +119,7 @@ solver_inst.model_obj_summary()
 solver_inst.plot_model_obj()
 
 solver = solver_inst.model_obj
+
 classifiers = solver_inst.model_obj_classifiers
 
 ### Train Model ###
@@ -124,7 +138,7 @@ tensorboard = keras.callbacks.TensorBoard(log_dir='tensorboard_logs', histogram_
 from project_utils.clean_tensorboard_logs import clean_tensorboard_logs
 clean_tensorboard_logs()
 
-solver.fit(x=train_data, y=train_labels,
+solver.fit(x=train_data_dict, y=train_labels,
            epochs=epochs,
            batch_size=batch_size,
            verbose=1,

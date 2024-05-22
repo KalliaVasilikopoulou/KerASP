@@ -57,36 +57,39 @@ class Solver():
 
         print('Building Keras model...')
 
-        #solver_input = [[] for _ in range(len(classifiers_conf.items()))]
-        solver_input = {i: [] for i in classifiers_conf}
-        classes_probs = []
 
-        for obj in all_objects:
+        solver_input = {}
+        classes_probs = {}
+        
+        for ind_classifier in classifiers_conf:
 
-            ind_classifier = classifier_of_object[obj]
             classifier_x = self.model_obj_classifiers[ind_classifier]
 
             classifier_inputs = 0
             classifier_input_shapes = []
             
             for layer in classifier_x.layers:
-                if layer.name.startswith('input'):
+                if isinstance(layer, keras.layers.InputLayer):
                     classifier_inputs +=1
                     classifier_input_shapes.append(layer.output.shape[1:])
 
-            if classifier_inputs > 1:
-                obj_input = [keras.Input(shape=classifier_input_shape, name='classifier_'+str(ind_classifier)+'_input_'+str(classifier_input)+'_of_'+classifiers_conf[ind_classifier]['object_type']+'_'+str(obj))
-                                         for classifier_input, classifier_input_shape in zip(range(classifier_inputs), classifier_input_shapes)]
-            else:
-                obj_input = keras.Input(shape=classifier_input_shapes[0], name='classifier_'+str(ind_classifier)+'_input_of_'+classifiers_conf[ind_classifier]['object_type']+'_'+str(obj))
+            for obj in objects_of_classifier[ind_classifier]:
 
-            solver_input[ind_classifier].append(obj_input)
-            
-            obj_probs = classifier_x(obj_input)
-            classes_probs.append(obj_probs)      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
-
-        ### Convert solver input dict to list ###
-        solver_input = list(solver_input.values())
+                if classifier_inputs > 1:
+                    for classifier_input, classifier_input_shape in zip(range(classifier_inputs), classifier_input_shapes):
+                        name = 'classifier_'+str(ind_classifier)+'_input_'+str(classifier_input)+'_of_'+classifiers_conf[ind_classifier]['object_type']+'_'+str(obj)
+                        solver_input[name] = keras.Input(shape=classifier_input_shape, name=name)
+                        obj_probs = classifier_x(solver_input[name])    # (None,classes_per_object)
+                        if K.int_shape(obj_probs)[-1] == 1: classes_probs[obj] = K.concatenate([obj_probs, 1-obj_probs], axis=-1)
+                        else: classes_probs[obj] = obj_probs
+                else:
+                    name = 'classifier_'+str(ind_classifier)+'_input_of_'+classifiers_conf[ind_classifier]['object_type']+'_'+str(obj)
+                    solver_input[name] = keras.Input(shape=classifier_input_shapes[0], name=name)
+                    obj_probs = classifier_x(solver_input[name])    # (None,classes_per_object)
+                    if K.int_shape(obj_probs)[-1] == 1: classes_probs[obj] = K.concatenate([obj_probs, 1-obj_probs], axis=-1)
+                    else: classes_probs[obj] = obj_probs
+           
+        classes_probs = list(dict_item[-1] for dict_item in sorted(classes_probs.items()))
 
         def separate_probs(classes_probs):    # (None,classes_per_object)
 
@@ -107,7 +110,7 @@ class Solver():
         probs_of_all_output_classes = [reshape_layer(probs_of_output_class_k) for probs_of_output_class_k in probs_of_all_output_classes]   # (None, satisfiable values)
         
         solver_output = layers.Concatenate(axis=-1)(probs_of_all_output_classes)   # (None, satisfiable values)
-        
+
         solver = models.Model(solver_input, solver_output, name='solver')
 
         print('Keras model building is completed.')
