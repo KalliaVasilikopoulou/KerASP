@@ -5,7 +5,7 @@ from project_utils.convert_to_categorical import custom_to_categorical as to_cat
 
 ### Set Training Parameters ###
 
-from training_configurations import training_configurations
+from user_scripts.training_configurations import training_configurations
 
 epochs = training_configurations['epochs']
 batch_size = training_configurations['batch_size']
