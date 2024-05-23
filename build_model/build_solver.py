@@ -34,6 +34,7 @@ for obj in all_objects:
             classes_of_object[obj] = classes_of_classifier[i]
 
 output_type = neurasp_conf['output_type']
+list_of_possible_output_classes = neurasp_conf['list_of_possible_output_classes']
 
 try: from user_scripts.create_classifiers import classifiers
 except ImportError:
@@ -46,6 +47,7 @@ class Solver():
     def __init__(self, compile_model = False, compile_model_classifiers = False):
 
         self.model_obj_classifiers = classifiers
+        self.output_classes_list = list_of_possible_output_classes
         self.model_obj = self.build_model_obj()
         
         if compile_model:
@@ -96,6 +98,7 @@ class Solver():
 
 
         objects_combinations_of_all_output_classes, output_classes_list = find_all_obj_classes_for_known_output_classes(return_output_classes_list=True)
+        self.output_classes_list = output_classes_list
         
         combinations_probs_of_all_output_classes = [[layers.Multiply(name=output_type+'_'+str(output_class_k)+'_comb_no_'+str(comb_ind+1)+'_prob')([probs[obj][classes_of_object[obj].index(class_x)] for obj,class_x in enumerate(comb)])  # obj = object, class_x = class of object
                                                  for comb_ind,comb in enumerate(objects_combinations_of_output_class_k)]
