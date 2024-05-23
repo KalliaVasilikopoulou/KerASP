@@ -1,0 +1,14 @@
+Grocery Prices:
+
+01. pineapple: 1.50 €/kg
+02. pomegranate: 5.50 €/kg
+03. strawberry: 4.00 €/kg
+04. custard_apple: 6.00 €/kg
+05. orange: 1.00 €/kg
+06. banana: 2.00 €/kg
+07. lemon: 1.00 €/kg
+08. head_cabbage: 0.50 €/kg
+09. cauliflower: 1.50 €/kg
+10. bell_pepper: 2.50 €/kg
+11. cucumber: 0.50 €/kg
+12. broccoli: 2.00 €/kg
