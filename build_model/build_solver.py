@@ -49,7 +49,7 @@ class Solver():
         classifier_input_shapes = []
         
         for layer in self.model_obj_classifier.layers:
-            if layer.name.startswith('input'):
+            if isinstance(layer, keras.layers.InputLayer):
                 classifier_inputs +=1
                 classifier_input_shapes.append(layer.output.shape[1:])
 
@@ -60,7 +60,10 @@ class Solver():
         else:
             solver_input = [keras.Input(shape=classifier_input_shapes[0], name='input_of_'+object_type+'_'+str(object_i)) for object_i in range(num_of_objects)]
         
-        classes_probs = [self.model_obj_classifier(i) for i in solver_input]      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
+        classes_probs = [self.model_obj_classifier(i)
+                         if K.int_shape(self.model_obj_classifier(i))[-1] != 1
+                         else K.concatenate([self.model_obj_classifier(i), 1-self.model_obj_classifier(i)], axis=-1)
+                         for i in solver_input]      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
 
 
         def separate_probs(classes_probs):    # (None,classes_per_object)
