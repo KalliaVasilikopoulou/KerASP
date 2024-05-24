@@ -72,7 +72,7 @@ class Solver():
             classifier_input_shapes = []
             
             for layer in classifier_x.layers:
-                if layer.name.startswith('input'):
+                if isinstance(layer, keras.layers.InputLayer):
                     classifier_inputs +=1
                     classifier_input_shapes.append(layer.output.shape[1:])
 
@@ -85,6 +85,8 @@ class Solver():
             solver_input[ind_classifier].append(obj_input)
             
             obj_probs = classifier_x(obj_input)
+            if K.int_shape(obj_probs)[-1] == 1: obj_probs = K.concatenate([obj_probs, 1-obj_probs], axis=-1)
+
             classes_probs.append(obj_probs)      # [(None,classes_per_object),(None,classes_per_object),(None,classes_per_object)]
 
         ### Convert solver input dict to list ###
