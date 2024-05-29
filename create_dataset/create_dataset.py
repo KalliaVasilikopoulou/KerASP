@@ -40,10 +40,18 @@ for obj_class in data_organized_by_object_class:
 data_organized_by_object_class_pointer = {obj_class:0 for obj_class in list_of_object_classes}
 
 
-from find_interpretations.find_output_class_for_object_classes import find_all_output_classes_for_known_obj_classes
-output_classes, output_classes_list = find_all_output_classes_for_known_obj_classes(print_details=True, return_output_classes_list=True)
+from find_interpretations.find_object_classes_for_output_class import find_all_obj_classes_for_known_output_classes
+obj_classes_combs, output_classes_list = find_all_obj_classes_for_known_output_classes(print_details=True, return_output_classes_list=True)
 
-from project_utils.convert_number import number_to_base
+obj_classes_combs_extracted = [comb for combs_of_output_class in obj_classes_combs for comb in combs_of_output_class]
+obj_classes_combs_sorted = sorted(obj_classes_combs_extracted)
+
+combs_to_output_dict = {}
+for output_class_ind, output_class in enumerate(output_classes_list):
+    combs_of_output_class = obj_classes_combs[output_class_ind]
+    for obj_classes_comb in combs_of_output_class:
+        obj_classes_comb_str = ','.join([str(obj_class) for obj_class in obj_classes_comb])
+        combs_to_output_dict[obj_classes_comb_str] = output_class
 
 train_data = [[] for _ in range(classifier_inputs)]
 train_obj_classes_labels = []
@@ -60,10 +68,9 @@ unsat_value = float('-inf')
 
 while True:
     try:
-        for ind, output_class_for_object_classes in enumerate(output_classes):
-            if output_class_for_object_classes == unsat_value: continue # if unsatisfiable, continue
-            
-            object_classes_comb = all_object_classes_combs[ind]
+        for object_classes_comb in obj_classes_combs_sorted:
+            object_classes_comb_str = ','.join([str(obj_class) for obj_class in obj_classes_comb])
+            output_class_for_object_classes = combs_to_output_dict[object_classes_comb_str]
 
             sample_data = [[] for _ in range(classifier_inputs)]
             sample_obj_classes_labels = []
