@@ -85,16 +85,16 @@ def find_all_obj_classes_for_known_output_classes(print_details=False, return_ou
             print('Output class', output_class, 'corresponds to', len(models_of_output_class), 'object classes combination(s) (model(s)) totally:')
             for i in range(len(models_of_output_class)):
                 model_comb = models_of_output_class[i]
-                comb_list = ['object '+str(all_objects[j])+' with value '+model_comb[j] for j in range(len(all_objects))]
+                comb_list = ['object '+str(all_objects[j])+' with value '+str(model_comb[j]) for j in range(len(all_objects))]
                 comb_str = ' and '.join(comb_list)
                 print('\tCombination', i, ':', comb_str)
             
         print('\n')
 
     if return_output_classes_list:
-        return models_of_all_output_classes, satisfiable_output_classes      # [all_satisfiable_output_classes, models_for_each_rate, num_of_objects], [satisfiable output classes]
+        return models_of_all_output_classes, satisfiable_output_classes      # [all_satisfiable_output_classes, models_for_each_output_class, num_of_objects], [satisfiable output classes]
     else:
-        return models_of_all_output_classes                              # [all_satisfiable_output_classes, models_for_each_rate, num_of_objects]
+        return models_of_all_output_classes                              # [all_satisfiable_output_classes, models_for_each_output_class, num_of_objects]
 
 
 
