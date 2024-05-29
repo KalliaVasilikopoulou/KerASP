@@ -5,7 +5,7 @@ training_configurations = {
 	"cell_3_index": "0,2",
 	"cell_ukn_index": "2,2",
 	"mnist_dataset_portion": 1.0,
-	"add_typed_digits_to_dataset": false,
+	"add_typed_digits_to_dataset": False,
 
 	"epochs": 10,
 	"batch_size": 12,
