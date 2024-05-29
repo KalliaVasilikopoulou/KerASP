@@ -83,8 +83,8 @@ for ind_classifier in classifiers_conf:
 ##### Convert train data dict to list ###
 ##train_data = list(train_data.values())
 
-from find_interpretations.find_output_class_for_object_classes import find_all_output_classes_for_known_obj_classes
-_, output_classes_list = find_all_output_classes_for_known_obj_classes(return_output_classes_list=True)
+from find_interpretations.find_object_classes_for_output_class import find_all_obj_classes_for_known_output_classes
+_, output_classes_list = find_all_obj_classes_for_known_output_classes(return_output_classes_list=True)
 
 train_labels = to_categorical(train_labels, classes_list=output_classes_list)
 
