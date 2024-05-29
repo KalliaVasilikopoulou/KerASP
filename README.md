@@ -1,3 +1,5 @@
+!!! NEW VERSION !!! The new version can handle multiple classifiers that accept different inputs and return different distributions (each classifier has a different set of classes where it assigns probabilities). The solver calculates the probabilities of the combinations of all the different classifiers' classes and, after that, it calcuclates and returns the probability distribution of the solver's output classes.
+
 KerASP Model Training Project
 
 KerASP Model Training Project attempts to create a new KerASP 'solver', that is, basically, a keras model extension of a given classifier, and train the whole model based on new labels, more complex than the initial ones.
