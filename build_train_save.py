@@ -67,8 +67,8 @@ for i in range(len(train_data)):    # i is index of class input (input for diffe
     train_data[i] = [np.squeeze(j, axis=1) for j in train_data[i]]      # list conctaining classifier_inputs elements and each element is a list containing num_of_objects elements and each element has shape (samples, datapoint shape)
 
 
-from find_interpretations.find_output_class_for_object_classes import find_all_output_classes_for_known_obj_classes
-_, output_classes_list = find_all_output_classes_for_known_obj_classes(return_output_classes_list=True)
+from find_interpretations.find_object_classes_for_output_class import find_all_obj_classes_for_known_output_classes
+_, output_classes_list = find_all_obj_classes_for_known_output_classes(return_output_classes_list=True)
 
 train_labels = to_categorical(train_labels, classes_list=output_classes_list)
 
