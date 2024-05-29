@@ -8,7 +8,7 @@ training_configurations = {	"epochs": 10,
 	"embedding_dim": 32,
 	"max_words_in_dict": 50000,
 	"max_words_per_sample" : 20,
-	"tokenize_data": true,
+	"tokenize_data": True,
 
 	"program_specs": {
 		"num_of_objects": 3,
