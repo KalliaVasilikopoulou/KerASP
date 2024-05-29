@@ -12,7 +12,7 @@ training_configurations = {
 	"dropout_rate": 0.5,
 	"learning_rate": 1e-3,
 	"decay": 1e-5,
-	"add_typed_digits_to_dataset": false,
+	"add_typed_digits_to_dataset": False,
 
 	"program_specs": {
 		"num_of_objects": 3,
