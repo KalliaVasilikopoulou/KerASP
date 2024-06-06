@@ -1,5 +1,3 @@
-import numpy as np
-
 ### Import Model ###
 
 from build_model.build_solver import Solver
