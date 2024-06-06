@@ -1,21 +1,3 @@
-import numpy as np
-
-from project_utils.convert_to_categorical import custom_to_categorical as to_categorical
-
-
-### Set Training Parameters ###
-
-from user_scripts.training_configurations import training_configurations
-
-neurasp_conf = training_configurations['neurasp_conf']
-classifiers_conf = neurasp_conf['classifiers_conf']
-
-objects_of_classifier = {i: sorted(classifiers_conf[i]['objects']) for i in classifiers_conf}
-
-try: tokenize_data = training_configurations['tokenize_data']
-except KeyError: tokenize_data = False
-
-
 ### Import Model ###
 
 from build_model.build_solver import Solver
